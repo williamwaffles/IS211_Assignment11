@@ -1,15 +1,13 @@
-from flask import Flask, render_template, url_for, redirect, request
+from flask import Flask, render_template, redirect, request
 import re
 
 app = Flask(__name__)
 
 todo = []
 
-
 @app.route('/')
 def index():
     return render_template('index.html', todo=todo)
-
 
 @app.route('/newtask', methods=['POST'])
 def newtask():
@@ -36,4 +34,4 @@ def clear():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
