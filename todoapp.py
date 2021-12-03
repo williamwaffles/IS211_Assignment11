@@ -1,31 +1,39 @@
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, request
+import re
 
 app = Flask(__name__)
 
-@app.route('/main')
-def main():
+todo = []
 
-    return render_template('index.html')
 
 @app.route('/')
-def new():
-
-    return redirect(url_for('main'))
-
+def index():
+    return render_template('index.html', todo=todo)
 
 
-@app.route('/hello/<name>')
-def call_name(name):
+@app.route('/newtask', methods=['POST'])
+def newtask():
+    task = request.form['Task']
+    priority = request.form['Priority']
+    email = request.form['Email Address']
 
-    return f'Hi, {name}!'
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return redirect('/')
+    elif not task:
+        return redirect('/')
+    elif priority == 'Priority':
+        return redirect('/')
+    else:
+        todo.append((task, priority, email))
+    print(todo)
+    return redirect('/')
 
-'''@app.route('/adder/<x>/<y>')
-def adder(x, y):
-    sum = float(x) + float(y)
-    return f'{x} + {y} = {sum}'
-'''
+
+@app.route('/clear', methods=['POST'])
+def clear():
+    del todo[:]
+    return redirect('/')
 
 
 if __name__ == '__main__':
-
     app.run(debug=True)
